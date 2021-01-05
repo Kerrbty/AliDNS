@@ -1,0 +1,26 @@
+# 阿里云更新域名解析文档
+# https://help.aliyun.com/document_detail/29776.html
+# https://help.aliyun.com/document_detail/29774.html
+
+
+# 阿里云信息，从阿里云获取填写即可
+AliyunData:
+  # 阿里云的AccessKey_ID , Access_Key_Secret , region_id
+  # 获取方法，参考文档: https://help.aliyun.com/knowledge_detail/38738.html
+  AccessKey_ID: '自己阿里云账号里面获取id'
+  Access_Key_Secret: '自己阿里云账号里面获取安全码'
+  region_id: "cn-hangzhou"  # 节点 
+
+# DNS解析信息
+UserData:
+  # 需要修改的域名
+  DomainName: 'youdomain.com' # 你购买的域名 
+  # 解析的主机
+  RR: 'nas'
+  # 解析的记录
+  DomainType: 'A'
+  # 解析更新的值，如果填写 Auto_Lines ,则从命令行获取
+  UpdateDomain: 'Auto_Lines'
+  #UpdateDomain: '127.0.0.1'
+  # 默认5分钟去查询一次 
+  update_time: 5
