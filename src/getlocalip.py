@@ -122,6 +122,17 @@ def GetCurrentIp10():
         return findip[0]
     except Exception:
         return None
+        
+def GetCurrentIp11():
+    try: 
+        icanhazip = 'http://icanhazip.com/'
+        http = requests.session()
+        http.keep_alive = False
+        html = http.get(icanhazip, headers=http_headers)
+        findip = re.findall("([0-9\.]+)", html.text)
+        return findip[0]
+    except Exception:
+        return None
 
 switch={
 	1:GetCurrentIp1, 
@@ -134,6 +145,7 @@ switch={
 	8:GetCurrentIp8, 
 	9:GetCurrentIp9, 
 	10:GetCurrentIp10, 
+	11:GetCurrentIp11,
 }
 
 def GetRealAddr():
