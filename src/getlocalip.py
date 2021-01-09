@@ -5,6 +5,7 @@ import requests
 import json
 import sys
 import re
+import time
 
 http_headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36'}
@@ -153,10 +154,13 @@ def GetRealAddr():
         global iCurId
         ipAddr = switch[iCurId]()
         iCurId = iCurId + 1  # 下次用下一个查询 
+        if iCurId > len(switch):
+            iCurId = 1
         if ipAddr:
             break
     return ipAddr
 
 if __name__ == "__main__":
-    print(GetRealAddr())
-    print(GetRealAddr())
+    for i in range(1, 100, 1):
+        time.sleep(5)
+        print(GetRealAddr())

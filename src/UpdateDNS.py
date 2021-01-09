@@ -16,7 +16,7 @@ def AliAccessKey(id,Secret,region):
         client = AcsClient(id, Secret, region)
         return client
     except Exception as e:
-        print("验证aliyun key失败")
+        print("check aliyun key fail!")
         print(e)
         sys.exit(-1)
 
@@ -27,7 +27,7 @@ def read_yaml(filename):
         yaml_file.close()
         return yaml_data
     except Exception as e:
-        print("读取配置文件错误")
+        print("Read conf.yaml error")
         print(e)
         sys.exit(-1)
 
@@ -44,7 +44,7 @@ def GetDNSRecordId(yaml_data, client, DomainName):
                 return RecordId['RecordId'],RecordId['Value']
 
     except Exception as e:
-        print("获取RecordId失败")
+        print("Get RecordId Fail")
         print(e)
         sys.exit(-1)
     return '','' # 不存在 
@@ -55,13 +55,12 @@ def AddOrUpdateDomainRecord(client, DomainName, yaml_data, RecordId, ipAddr):
         if len(RecordId)>0:
             request = UpdateDomainRecordRequest()
             request.set_RecordId(RecordId)
-            print("更新", RecordId, len(RecordId))
+            print("Update", RecordId, len(RecordId))
         else:
             request = AddDomainRecordRequest()
             request.set_DomainName(DomainName)
-            print("添加")
-            
-            
+            print("Add")
+         
         request.set_accept_format('json')
 
         if 'Auto_Lines' == yaml_data['UserData']['UpdateDomain']:
@@ -72,7 +71,8 @@ def AddOrUpdateDomainRecord(client, DomainName, yaml_data, RecordId, ipAddr):
         # 如果跟已有设置是一致的，则直接返回 
         if DomainValue == ipAddr:
             return RecordId,DomainValue
-            
+        
+        print("set dns", str(yaml_data['UserData']['RR'])+str(yaml_data['UserData']['DomainName']), "--->", DomainValue)
         # 跟设置的不同才需要更新，如果已经设置一样则不用 
         request.set_Value(DomainValue)
         request.set_Type(yaml_data['UserData']['DomainType'])
@@ -85,7 +85,7 @@ def AddOrUpdateDomainRecord(client, DomainName, yaml_data, RecordId, ipAddr):
         
         return json_data['RecordId'],DomainValue
     except Exception as e:
-        print("更新域名解析失败")
+        print("update dns error")
         print(e)
         return RecordId,ipAddr
 
@@ -96,7 +96,7 @@ def main():
     RecordId,CurrentSetIP = GetDNSRecordId(yaml_data,client,yaml_data['UserData']['DomainName'])
     while True:
         TmpRecordId,CurrentSetIP = AddOrUpdateDomainRecord(client, yaml_data['UserData']['DomainName'], yaml_data, RecordId, CurrentSetIP)
-        time.sleep(yaml_data['UserData']['update_time']) 
+        time.sleep(int(yaml_data['UserData']['update_time'])*60) 
 
 if __name__ == "__main__" :
     main()
