@@ -5,7 +5,6 @@ import requests
 import json
 import sys
 import re
-import time
 
 http_headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36'}
@@ -18,7 +17,7 @@ def GetCurrentIp1():
         http = requests.session()
         http.keep_alive = False
         html = http.get(ip138url, headers=http_headers)
-        findip = re.findall("ip=([0-9\.]+)", html.text)
+        findip = re.findall("ip=([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})", html.text)
         return findip[0]
     except Exception:
         return None
@@ -52,7 +51,7 @@ def GetCurrentIp4():
         http = requests.session()
         http.keep_alive = False
         html = http.get(webmasterhome, headers=http_headers)
-        findip = re.findall("<strong>([0-9\.]+)</strong>", html.text)
+        findip = re.findall("<strong>([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})</strong>", html.text)
         return findip[0]
     except Exception:
         return None
@@ -63,7 +62,7 @@ def GetCurrentIp5():
         http = requests.session()
         http.keep_alive = False
         html = http.get(iptoolurl, headers=http_headers)
-        findip = re.findall('<span id="IpValue">([0-9\.]+)</span>', html.text)
+        findip = re.findall('<span id="IpValue">([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})</span>', html.text)
         return findip[0]
     except Exception:
         return None
@@ -74,7 +73,8 @@ def GetCurrentIp6():
         http = requests.session()
         http.keep_alive = False
         html = http.get(hao7188, headers=http_headers)
-        findip = re.findall("ip/([0-9\.]+)\.html", html.text)
+        delspace = html.text.replace(' ','').replace('\r', '').replace('\n', '')
+        findip = re.findall('您的iP地址是：<ahref="ip/([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\.html"', delspace)
         return findip[0]
     except Exception:
         return None
@@ -85,7 +85,7 @@ def GetCurrentIp7():
         http = requests.session()
         http.keep_alive = False
         html = http.get(ip123cha, headers=http_headers)
-        findip = re.findall('ip/\?q=([0-9\.]+)', html.text)
+        findip = re.findall('ip/\?q=([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})', html.text)
         return findip[0]
     except Exception:
         return None
@@ -119,34 +119,70 @@ def GetCurrentIp10():
         http = requests.session()
         http.keep_alive = False
         html = http.get(ip138url, headers=http_headers)
-        findip = re.findall("ip=([0-9\.]+)", html.text)
+        findip = re.findall("ip=([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})", html.text)
         return findip[0]
     except Exception:
         return None
-        
+
 def GetCurrentIp11():
     try: 
         icanhazip = 'http://icanhazip.com/'
         http = requests.session()
         http.keep_alive = False
         html = http.get(icanhazip, headers=http_headers)
-        findip = re.findall("([0-9\.]+)", html.text)
+        findip = re.findall("([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})", html.text)
+        return findip[0]
+    except Exception:
+        return None
+
+def GetCurrentIp12():
+    try:
+        yqie = 'http://ip.yqie.com/clientip.aspx'
+        http = requests.session()
+        http.keep_alive = False
+        html = http.get(yqie, headers=http_headers)
+        findip = re.findall("ip=([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})", html.text)
+        return findip[0]
+    except Exception:
+        return None
+
+def GetCurrentIp13():
+    try:
+        pconline = 'http://whois.pconline.com.cn/ipJson.jsp?json=true'
+        http = requests.session()
+        http.keep_alive = False
+        html = http.post(pconline, headers=http_headers, data="ip=myip")
+        findip = re.findall('ip":"([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})"', html.text)
+        return findip[0]
+    except Exception:
+        return None
+        
+def GetCurrentIp14():
+    try:
+        jq99 = 'http://members.3322.org/dyndns/getip'
+        http = requests.session()
+        http.keep_alive = False
+        html = http.get(jq99, headers=http_headers)
+        findip = re.findall('([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})', html.text)
         return findip[0]
     except Exception:
         return None
 
 switch={
-	1:GetCurrentIp1, 
-	2:GetCurrentIp2, 
-	3:GetCurrentIp3, 
-	4:GetCurrentIp4, 
-	5:GetCurrentIp5, 
-	6:GetCurrentIp6, 
-	7:GetCurrentIp7, 
-	8:GetCurrentIp8, 
-	9:GetCurrentIp9, 
-	10:GetCurrentIp10, 
-	11:GetCurrentIp11,
+    1:GetCurrentIp1, 
+    2:GetCurrentIp2, 
+    3:GetCurrentIp3, 
+    4:GetCurrentIp4, 
+    5:GetCurrentIp5, 
+    6:GetCurrentIp6, 
+    7:GetCurrentIp7, 
+    8:GetCurrentIp8, 
+    9:GetCurrentIp9, 
+    10:GetCurrentIp10, 
+    11:GetCurrentIp11, 
+    12:GetCurrentIp12, 
+    13:GetCurrentIp13, 
+    14:GetCurrentIp14, 
 }
 
 def GetRealAddr():
@@ -158,9 +194,8 @@ def GetRealAddr():
             iCurId = 1
         if ipAddr:
             break
-    return ipAddr
+    return ipAddr, iCurId-1
 
 if __name__ == "__main__":
-    for i in range(1, 100, 1):
-        time.sleep(5)
-        print(GetRealAddr())
+    for i in range(1, len(switch)+1):
+        print( i, switch[i]())
